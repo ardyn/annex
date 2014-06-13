@@ -11,13 +11,14 @@ class Color extends Input {
   *
   * @access public
   * @param string $name
+  * @param string $dummy
   * @param string $value
   * @param array $attributes
   * @return string
   */
-  public function make($name, $value, array $attributes) {
+  public function make($name, $value, $dummy, array $attributes) {
 
-    return parent::make($name, $value, $attributes, 'color');
+    return parent::make($name, $value, 'color', $attributes);
 
   } /* function make */
 

@@ -9,10 +9,11 @@ interface TagInterface {
   *
   * @acces public
   * @param string $name
+  * @param mixed $selected
   * @param mixed $value
   * @return string
   */
-  public function make($name, $value, array $attributes);
+  public function make($name, $value, $selected, array $attributes);
 
 } /* interface TagInterface */
 

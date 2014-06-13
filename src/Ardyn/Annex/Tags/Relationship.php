@@ -12,19 +12,22 @@ class Relationship extends Tag {
   * @access public
   * @param string $name
   * @param string $value
+  * @param string $dummy
   * @param array $options
   * @return string
   */
-  public function make($name, $options, array $attributes) {
+  public function make($name, $options, $dummy, array $attributes) {
 
-    $field = $this->form->options->nameField($name);
-    $model = $this->form->model->$name()->getRelated();
-    $default = $this->form->options->value($name);
+    return 'NOT YET IMPLEMENTED';
+
+    $field = $this->options->nameField($name);
+    $model = $this->model->$name()->getRelated();
+    $default = $this->options->value($name);
     $elements = [];
 
     foreach ( $model::lists($field, $model->getKeyName()) as $key => $label ) {
 
-      $checked = $this->form->model->$name->find($key) ? true : $label == $default;
+      $checked = $this->model->$name->find($key) ? true : $label == $default;
 
       $elements[] = [
         'tag' => $this->form->checkbox("{$name}[{$key}]", 1, $checked, $attributes),
@@ -33,7 +36,7 @@ class Relationship extends Tag {
 
     }
 
-    return $this->form->view->make('ardyn/annex::checkbox', compact('elements'))->render();
+    return $this->view->make('ardyn/annex::checkbox', compact('elements'))->render();
 
   } /* function make */
 

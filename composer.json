@@ -1,6 +1,7 @@
 {
     "name": "ardyn/annex",
-    "description": "",
+    "description": "Easy creation of HTML forms with validation.",
+    "keywords": [ "validation", "form", "form builder" ],
     "authors": [
         {
             "name": "Andrew Ardan",

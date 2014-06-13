@@ -35,12 +35,12 @@ class Repository implements RepositoryInterface {
     'label' => null,        // Label: string
     'rules' => [],          // Validation Rules: string|array
     'type' => 'text',       // Input type: string
-                            // See Ardyn/Annex/Tags for available types.
     'attributes' => [],     // Tag attributes: null|array
     'value' => null,        // Default value: null|string
     'messages' => [],       // Validation Messages: string
     'options' => [],        // Additional options: null|array
     'name_field' => null,   // Column name for linked table: null|string
+#    'alias' => null,        // We may want to use an alias instead of the field name
   ];
 
 
@@ -72,6 +72,9 @@ class Repository implements RepositoryInterface {
   * @return void
   */
   public function initialize($file) {
+
+    if ( is_null($file) )
+      return;
 
     // We should validate the config file
     $path = $this->config->get('ardyn/annex::form_file_path') . '/';

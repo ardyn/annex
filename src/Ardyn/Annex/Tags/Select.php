@@ -12,17 +12,18 @@ class Select extends Tag {
   * @access public
   * @param string $name
   * @param array $options
+  * @param string $selected
   * @param array $attributes
   * @retun string
   */
-  public function make($name, $options, array $attributes) {
+  public function make($name, $options, $selected, array $attributes) {
 
-    $selected = $this->form->model ? ( $this->form->model->$name ?: $this->form->options->value($name) ) : null;
-    $options = isset($options) ? $options : $this->form->options->options($name);
+    $expectedValue = $this->getExpectedValue($name, $selected);
 
+    $options = isset($options) ? $options : $this->options->options($name);
     $options = array_key_exists('', $options) ? $options : ['' => ''] + $options;
 
-    return $this->form->select($name, $options, $selected, $attributes);
+    return $this->form->select($name, $options, $expectedValue, $attributes);
 
   } /* function make */
 

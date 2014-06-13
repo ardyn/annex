@@ -33,7 +33,7 @@ class AnnexServiceProvider extends HtmlServiceProvider {
       $this->app['config']['ardyn/annex::options_repository']
     );
 
-    require __DIR__.'/../../helpers/html-macros.php';
+    require __DIR__.'/../../macros/html.php';
 
   } /* function boot */
 
@@ -90,7 +90,7 @@ class AnnexServiceProvider extends HtmlServiceProvider {
 
     $this->app->bindShared('form', function ($app) {
 
-      $form = new Form(
+      $form = new FormBuilder(
         $app['html'],
         $app['url'],
         $app['session.store']->getToken(),

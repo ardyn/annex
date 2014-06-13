@@ -12,30 +12,48 @@ class Radio extends Tag {
   * @access public
   * @param string $name
   * @param array $options
+  * @param string $checked
   * @param array $attributes
   * @return string
   */
-  public function make($name, $options, array $attributes) {
+  public function make($name, $options, $checked, array $attributes) {
 
-    $options = $this->form->options->options($name);
-    $default = $this->form->options->value($name);
-    $value = $this->form->model ? $this->form->model->$name : null;
+    $options = is_array($options) ? $options : $this->options->options($name);
+    $default = isset($checked) ? $checked : $this->options->value($name);
+    $expectedValue = $this->getExpectedValue($name, $default);
+    $view = $this->config->get('ardyn/annex::radio_view');
     $elements = [];
-    $view = $this->form->config->get('ardyn/annex::radio_view');
 
-    foreach ( $options as $key => $label ) {
+    foreach ( $options as $key => $label )
+      $elements[] = $this->createRadioButton($name, $key, $label, $expectedValue, $attributes);
 
-      $checked = $value ?: $default == $key;
-      $elements[] = [
-        'tag' => $this->form->radio($name, $key, $checked, $attributes),
-        'label' => $label,
-      ];
-
-    }
-
-    return $this->form->view->make($view, compact('elements'))->render();
+    return $this->view->make($view, compact('elements'))->render();
 
   } /* function make */
+
+
+
+  /**
+   * Create a radio button
+   *
+   * @access protected
+   * @param string $name
+   * @param string $key
+   * @param string $label
+   * @param mixed $expectedValue
+   * @param array $attributes
+   * @return array
+   */
+  protected function createRadioButton($name, $key, $label, $expectedValue, $attributes) {
+
+    $checked = ($expectedValue == $key);
+
+    return [
+      'tag' => $this->form->radio($name, $key, $checked, $attributes),
+      'label' => $label,
+    ];
+
+  } /* function createRadioButton */
 
 } /* class Radio */
 

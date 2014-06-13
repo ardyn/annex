@@ -10,15 +10,14 @@ class Input extends Tag {
   * @access public
   * @param string $name
   * @param string $value
+  * @param string $type
   * @param array $attributes
-  * @param [string $type]
   */
-  public function make($name, $value, array $attributes, $type='text') {
+  public function make($name, $value, $type, array $attributes) {
 
-    $default = $this->form->options->value($name);
-    $value = $this->form->getValueAttribute($name, $value) ?: $default;
+    $expectedValue = $this->getExpectedValue($name, $value);
 
-    return $this->form->input($type, $name, $value, $attributes);
+    return $this->form->input($type, $name, $expectedValue, $attributes);
 
   } /* function make */
 

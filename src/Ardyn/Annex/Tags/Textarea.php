@@ -12,15 +12,15 @@ class Textarea extends Tag {
   * @access public
   * @param string $name
   * @param string $value
+  * @param string $dummy
   * @param array $attributes
   * @return string
   */
-  public function make($name, $value, array $attributes) {
+  public function make($name, $value, $dummy, array $attributes) {
 
-    $default = $this->form->options->value($name);
-    $value = $this->form->getValueAttribute($name, $value) ?: $default;
+    $expectedValue = $this->getExpectedValue($name, $value);
 
-    return $this->form->textarea($name, $value, $attributes);
+    return $this->form->textarea($name, $expectedValue, $attributes);
 
   } /* function make */
 

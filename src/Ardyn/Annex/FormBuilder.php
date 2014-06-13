@@ -2,21 +2,21 @@
 
 namespace Ardyn\Annex;
 
-use Closure;
-use Illuminate\Html\FormBuilder;
 use Illuminate\Html\HtmlBuilder;
-use Illuminate\Support\MessageBag;
-use Illuminate\Routing\UrlGenerator;
 use Illuminate\View\Factory as View;
+use Illuminate\Routing\UrlGenerator;
+use Illuminate\Html\FormBuilder as Form;
 use Illuminate\Config\Repository as Config;
-use Illuminate\Database\Eloquent\Model as Eloquent;
 use Ardyn\Annex\Options\RepositoryInterface as Options;
 
 /**
  * One convenient place to store form element data.
  *
+ * Concerns: Drop $template? Use a view instead?
+ *           We should 'use' FormBuilder instead of extend it?
+ *
  */
-class Form extends FormBuilder {
+class FormBuilder extends Form {
 
  /**
   * Validation and creation rules
@@ -28,7 +28,7 @@ class Form extends FormBuilder {
  /**
   * The view environment instance
   *
-  * @var \Illuminate\View\Environment
+  * @var \Illuminate\View\Factory
   */
   protected $view;
 
@@ -45,13 +45,6 @@ class Form extends FormBuilder {
   * @var \Illuminate\Support\ViewErrorBag
   */
   public $errors;
-
- /**
-  * Template for a form row
-  *
-  * @var \Closure
-  */
-  protected $template;
 
 
 
@@ -81,6 +74,7 @@ class Form extends FormBuilder {
     $this->options = $options;
     $this->view = $view;
     $this->config = $config;
+    $this->errors = $view->shared('errors');
 
   } /* function __construct */
 
@@ -91,13 +85,11 @@ class Form extends FormBuilder {
   *
   * @access public
   * @param string $options
-  * @param \Illuminate\Database\Eloquent\Model $model
-  * @param \Closure $template
-  * @param string $config
+  * @param string $form
   */
-  public function open(array $options=[], Eloquent $model=null, $config=null, Closure $template=null) {
+  public function open(array $options=[], $form=null) {
 
-    $this->make($config, $model, $template);
+    $this->make($form);
 
     return parent::open($options);
 
@@ -105,25 +97,37 @@ class Form extends FormBuilder {
 
 
 
+  /**
+   * Open a form with a Model
+   *
+   * @access
+   * @param mixed $model
+   * @param array $options
+   * @param string $form
+   * @return void
+   */
+  public function model($model, array $options=[], $form=null) {
+
+    $this->make($form, $model);
+
+    return parent::model($model, $options);
+
+  } /* function model */
+
+
+
  /**
   * Setup our form with a config file and optional model
   *
   * @access public
-  * @param string $config
-  * @param \Illuminate\Database\Eloquent\Model $model
-  * @param \Closure $template
-  * @return \Ardyn\Annex\Form
+  * @param string $form
+  * @param mixed $model
+  * @return \Ardyn\Annex\FormBuilder
   */
-  public function make($config, Eloquent $model=null, Closure $template=null) {
+  public function make($form, $model=null) {
 
-    if ( $config )
-      $this->options->initialize($config);
-
-    if ( $model )
-      $this->model = $model;
-
-    if ( $template )
-      $this->template = $template;
+    $this->options->initialize($form);
+    $this->model = $model;
 
     return $this;
 
@@ -136,15 +140,15 @@ class Form extends FormBuilder {
   *
   * @access public
   * @param string $name
-  * @param mixed $label
-  * @param array $attributes
+  * @param string $value
+  * @param array $options
   * @return string
   */
-  public function label($name, $label=null, $attributes=[]) {
+  public function label($name, $value=null, $options=[]) {
 
-    $label = $label ?: $this->options->label($name);
+    $label = isset($value) ? $value : $this->options->label($name);
 
-    return parent::label($name, $label, $attributes);
+    return parent::label($name, $label, $options);
 
   } /* function label */
 
@@ -156,55 +160,25 @@ class Form extends FormBuilder {
   * @access public
   * @param string $name
   * @param mixed $value
+  * @param mixed $selected
   * @param array $attributes
-  * @param mixed $type
   * @return string
   */
-  public function element($name, $value=null, $attributes=[]) {
+  public function element($name, $value=null, $selected=null, $attributes=[]) {
 
     $attributes = $this->mergeAttributes($name, $attributes);
 
     $class = "\Ardyn\Annex\Tags\\".studly_case($this->options->type($name));
-    $tag = new $class($this);
+    $tag = new $class($this, $this->model, $this->config, $this->options, $this->view);
 
-    return $tag->make($name, $value, $attributes);
+    return $tag->make($name, $value, $selected, $attributes);
 
   } /* function tag */
 
 
 
  /**
-  * Create HTML elements following the template
-  *
-  * @access public
-  * @param string $name
-  * @return string
-  */
-  public function row($name) {
-
-    return call_user_func($this->template, $this, $name);
-
-  } /* function row */
-
-
-
-  /**
-   * Set the errors
-   *
-   * @access public
-   * @param \Illuminate\Support\MessageBag $errors
-   * @return void
-   */
-  public function setErrors(MessageBag $errors) {
-
-    $this->errors = $errors;
-
-  } /* function setErrors */
-
-
-
- /**
-  * Merge tag attributes.
+  * Merge tag attributes
   *
   * @access private
   * @param string $column
@@ -273,30 +247,6 @@ class Form extends FormBuilder {
 
   } /* function ruleAttribute */
 
-
-
- /**
-  * Allow read access to the protected properties
-  *
-  * @access public
-  * @param string $name
-  * @return mixed
-  */
-  public function __get($name) {
-
-    switch ( $name ) {
-
-      case 'model':   return $this->model;
-      case 'options': return $this->options;
-      case 'view':    return $this->view;
-      case 'config':  return $this->config;
-
-      default:        trigger_error("Undefined property ".__CLASS__."::\${$name}", E_USER_NOTICE);
-
-    }
-
-  } /* function __get */
-
-} /* class Form */
+} /* class FormBuilder */
 
 /* EOF */

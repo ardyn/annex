@@ -1,4 +1,4 @@
-# Laravel Form Extention
+# Laravel Form Extension
 
 This package is in BETA stage! Apt to change quite a bit. Use with caution; don't judge.
 
@@ -109,7 +109,7 @@ And the generated HTML
 ## Validating Forms
 
 ```php
-$validator = FormValidator::make('contact_form');
+$validator = FormValidator::make('contact_form', Input::all());
 
 if ( $validator->passes() )
   echo 'Passed!';
@@ -119,7 +119,9 @@ else if ( $validator->fails() )
 
 ## TODO
 
+* Separate form validation and form building to different packages(?)
 * Add aliases for our input fields
 * Write tests
 * Update README
+* Proofread!
 * Refactor, again and again.

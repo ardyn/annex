@@ -12,12 +12,13 @@ class Hidden extends Input {
   * @access public
   * @param string $name
   * @param string $value
+  * @param string $dummy
   * @param array $attributes
   * @return string
   */
-  public function make($name, $value, array $attributes) {
+  public function make($name, $value, $dummy, array $attributes) {
 
-    return parent::make($name, $value, $attributes, 'hidden');
+    return parent::make($name, $value, 'hidden', $attributes);
 
   } /* function make */
 

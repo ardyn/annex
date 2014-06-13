@@ -12,12 +12,13 @@ class Time extends Input {
   * @access public
   * @param string $name
   * @param string $value
+  * @param string $dummy
   * @param array $attributes
   * @return string
   */
-  public function make($name, $value, array $attributes) {
+  public function make($name, $value, $dummy, array $attributes) {
 
-    return parent::make($name, $value, $attributes, 'time');
+    return parent::make($name, $value, 'time', $attributes);
 
   } /* function make */
 
