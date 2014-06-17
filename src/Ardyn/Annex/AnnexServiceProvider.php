@@ -33,7 +33,7 @@ class AnnexServiceProvider extends HtmlServiceProvider {
       $this->app['config']['ardyn/annex::options_repository']
     );
 
-    require __DIR__.'/../../macros/html.php';
+#    require __DIR__.'/../../macros/html.php';
 
   } /* function boot */
 

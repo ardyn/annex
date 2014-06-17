@@ -156,22 +156,23 @@ class FormBuilder extends Form {
 
  /**
   * Create an HTML input-like element
+  * Can be any of input, checkbox, radio, or select
   *
   * @access public
-  * @param string $name
-  * @param mixed $value
-  * @param mixed $selected
-  * @param array $attributes
+  * @param string $name       name attribute
+  * @param mixed  $value      value attribute
+  * @param mixed  $options    available values for value attribute
+  * @param array  $attributes additional HTML tag attributes
   * @return string
   */
-  public function element($name, $value=null, $selected=null, $attributes=[]) {
+  public function element($name, $value=null, $options=null, $attributes=[]) {
 
     $attributes = $this->mergeAttributes($name, $attributes);
 
     $class = "\Ardyn\Annex\Tags\\".studly_case($this->options->type($name));
     $tag = new $class($this, $this->model, $this->config, $this->options, $this->view);
 
-    return $tag->make($name, $value, $selected, $attributes);
+    return $tag->make($name, $value, $options, $attributes);
 
   } /* function tag */
 

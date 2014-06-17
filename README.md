@@ -1,15 +1,14 @@
 # Laravel Form Extension
 
-This package is in BETA stage! Apt to change quite a bit. Use with caution; don't judge.
+This package is in BETA stage! Apt to change quite a bit. Use with caution.
 
-Should be working with L4.2, but input types and Eloquent hasn't been tested.
-
-Annex allows us to build HTML forms using a config file to represent the form fields. Within this config file, we have the column type, label, and validation rules. Package also comes with a Validator class to valide the input against the rules defined in our config file.
+Annex allows us to build HTML forms using a config file to represent the form fields. Within this config file, we have the column type, label, and validation rules.
+Package also comes with a Validator class to valide the input against the rules defined in our config file.
 
 ## Installation
 
-Update `composer.json`, update the service providers and add aliases in `app/config/app.php`, then publish configuration files.
-<b></b>
+Update your application's `composer.json` file, add  the service providers and add aliases in `app/config/app.php`, then publish configuration files.
+
 ### Composer
 
 Update your `composer.json` file to include the following:
@@ -36,7 +35,7 @@ Add the following to the list of service providers in `app/config/app.php`:
 ];
 ```
 
-Since this package's `Form` class is extending Laravel's `Form` facade, you'll want to comment out the `'Illuminate\Html\HtmlServiceProvider'` service provider.
+Comment out the `'Illuminate\Html\HtmlServiceProvider'` service provider as `AnnexServiceProvider` extends `HtmlServiceProvider`.
 
 ### Add Alaises
 
@@ -88,28 +87,53 @@ return [
 ];
 ```
 
-### Example Blade template
+### Example Template
 
 In your code, you may initialize a form by including the config file name in the `Form::open` method.
+`Form::model()` is supported as well.
 
 ```php
-{{ Form::open([ 'url' => '#' ], null, 'form') }}
-{{ Form::label('name') }} {{ Form::element('name') }}
-{{ Form::close() }}
+echo Form::open([ 'url' => '#' ], 'form');
+echo Form::label('name');
+echo Form::element('name');
+echo Form::close();
 ```
 
 And the generated HTML
 
 ```html
 <form method="POST" action="#" accept-charset="UTF-8">
-<label for="name">First Name</label> <input autofocus="autofocus" placeholder="First Name" required="required" data-rules="alpha" max="30" name="name" type="text" value="Bob" id="name"></div>
+<label for="name">First Name</label>
+<input autofocus="autofocus" placeholder="First Name" required="required" data-rules="alpha" max="30" name="name" type="text" value="Bob" id="name"></div>
 </form>
+```
+
+### Form::element()
+
+Annex' element method has a slight variation in Laravel's FormBuilder methods (input, checkbox, radio, select).
+
+The function prototype is as follows;
+
+```php
+/**
+ * Create an HTML input-like element
+ * Can return any of input, checkbox, radio, or select
+ *
+ * @access public
+ * @param string $name       name attribute
+ * @param mixed  $value      value attribute
+ * @param mixed  $options    available values for value attribute
+ * @param array  $attributes additional HTML tag attributes
+ * @return string
+ */
+public function element($name, $value=null, $options=null, $attributes=[]);
+public function element($name, $value=null, $options=null, $attributes=[]);
 ```
 
 ## Validating Forms
 
 ```php
-$validator = FormValidator::make('contact_form', Input::all());
+$validator = FormValidator::make('MyFormValidator', 'form', Input::all());
 
 if ( $validator->passes() )
   echo 'Passed!';
@@ -119,9 +143,10 @@ else if ( $validator->fails() )
 
 ## TODO
 
-* Separate form validation and form building to different packages(?)
+* Separate form validation and form building into different packages(?)
 * Add aliases for our input fields
 * Write tests
-* Update README
 * Proofread!
 * Refactor, again and again.
+* Update 'relationship' type.
+* Test Form::model()

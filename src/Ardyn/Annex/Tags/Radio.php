@@ -16,7 +16,7 @@ class Radio extends Tag {
   * @param array $attributes
   * @return string
   */
-  public function make($name, $options, $checked, array $attributes) {
+  public function make($name, $checked, $options, array $attributes) {
 
     $options = is_array($options) ? $options : $this->options->options($name);
     $default = isset($checked) ? $checked : $this->options->value($name);

@@ -11,12 +11,12 @@ class Checkbox extends Tag {
   *
   * @access public
   * @param string $name
-  * @param array $options
   * @param array $checked
+  * @param array $options
   * @param string $attributes
   * @return string
   */
-  public function make($name, $options, $checked, array $attributes) {
+  public function make($name, $checked, $options, array $attributes) {
 
     $checked = is_array($checked) ? $checked : $this->options->value($name);
     $options = is_array($options) ? $options : $this->options->options($name);

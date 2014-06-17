@@ -16,7 +16,7 @@ class Select extends Tag {
   * @param array $attributes
   * @retun string
   */
-  public function make($name, $options, $selected, array $attributes) {
+  public function make($name, $selected, $options, array $attributes) {
 
     $expectedValue = $this->getExpectedValue($name, $selected);
 
